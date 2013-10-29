@@ -14,7 +14,7 @@
   <artifactId>crawler</artifactId>
   <packaging>jar</packaging>
   <name>SiteMorph Crawler</name>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
 
   <dependencies>
 

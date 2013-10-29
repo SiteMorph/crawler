@@ -12,6 +12,10 @@ public class NoIndexFilter implements PostFetchFilter {
   @Override
   public boolean storeResponse(Spider spider, Response response) {
 
+    if (response.getStatusCode() != StatusCode.OK) {
+      return true;
+    }
+
     HtmlDocument document = HtmlDocument.from(response);
 
     if (document.hasMeta(ROBOTS)) {
