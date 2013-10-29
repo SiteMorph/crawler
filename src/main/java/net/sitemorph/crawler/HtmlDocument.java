@@ -100,15 +100,7 @@ public class HtmlDocument {
   }
 
   public String getDescription() {
-    Elements metas = document.select(META_SELECTOR);
-    for (Element meta : metas) {
-      if (meta.hasAttr(NAME) &&
-          meta.attr(NAME).equalsIgnoreCase(DESCRIPTION) &&
-          meta.hasAttr(CONTENT)) {
-        return meta.attr(CONTENT).trim();
-      }
-    }
-    return null;
+    return getMeta(DESCRIPTION);
   }
 
   public boolean hasKeywords() {
@@ -116,16 +108,23 @@ public class HtmlDocument {
   }
 
   public String getKeywords() {
+    return getMeta(KEYWORDS);
+  }
+
+
+  public boolean hasMeta(String metaName) {
+    return null != getMeta(metaName);
+  }
+
+  public String getMeta(String metaName) {
     Elements metas = document.select(META_SELECTOR);
     for (Element meta : metas) {
       if (meta.hasAttr(NAME) &&
-          meta.attr(NAME).equalsIgnoreCase(KEYWORDS) &&
+          meta.attr(NAME).equalsIgnoreCase(metaName) &&
           meta.hasAttr(CONTENT)) {
         return meta.attr(CONTENT).trim();
       }
     }
     return null;
   }
-
-
 }

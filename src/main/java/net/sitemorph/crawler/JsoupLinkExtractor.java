@@ -4,15 +4,15 @@
 
 package net.sitemorph.crawler;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * Use Jsoup to parse a document and rewrite the links relative to the URL
@@ -23,6 +23,8 @@ import java.util.Set;
 public class JsoupLinkExtractor extends AbstractLinkExtractor {
 
   private static final String HREF = "href";
+  private static final String RELATIONSHIP = "rel";
+  private static final String NO_FOLLOW = "nofollow";
 
   @Override
   protected Set<URL> extractLinkStatusOk(Response content) {
@@ -32,6 +34,10 @@ public class JsoupLinkExtractor extends AbstractLinkExtractor {
     Set<URL> result = new HashSet<URL>();
     for (Element element : links) {
       if (!element.hasAttr(HREF)) {
+        continue;
+      }
+      if (element.hasAttr(RELATIONSHIP) && NO_FOLLOW.equalsIgnoreCase(
+          element.attr(RELATIONSHIP))) {
         continue;
       }
       try {
