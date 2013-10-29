@@ -1,4 +1,4 @@
-crawler - SiteMorph.net inspecting crawler with basic features and small footprint 
+crawler - inspecting crawler with basic features and small footprint 
 =======
 
 A basic inspection type crawler designed to be used as part of website audit
