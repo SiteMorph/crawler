@@ -17,7 +17,8 @@ public class UriNotHtmlFilter implements PreFetchFilter {
   final static Pattern FILTERS = Pattern.compile(
       ".*(\\.(css|js|bmp|gif|jpe?g" + "|png|tiff?|mid|mp2|mp3|mp4"
           + "|wav|avi|mov|mpeg|ram|m4v|pdf" +
-          "|rm|smil|wmv|swf|wma|zip|rar|gz|ai|idml|pdf|qxd|indt))$");
+          "|rm|smil|wmv|swf|wma|zip|rar|gz|ai|idml|pdf|qxd|indt|" +
+          "ico))$");
 
   @Override
   public boolean shouldVisit(URL url) {
