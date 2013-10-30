@@ -16,7 +16,13 @@ public class NoIndexFilter implements PostFetchFilter {
       return true;
     }
 
-    HtmlDocument document = HtmlDocument.from(response);
+    HtmlDocument document;
+    try {
+      document = HtmlDocument.from(response);
+    } catch (IllegalArgumentException e) {
+      // not html so not relevant
+      return true;
+    }
 
     if (document.hasMeta(ROBOTS)) {
       String directive = document.getMeta(ROBOTS);
