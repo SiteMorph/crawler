@@ -6,6 +6,7 @@ package net.sitemorph.crawler;
 
 import net.sitemorph.crawler.Response.Builder;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -148,5 +150,22 @@ public class RobotsTxtTest {
         .setStatusCode(StatusCode.OK)
         .setBody(body)
         .build();
+  }
+
+  @DataProvider(name = "urlPattern")
+  public Object[][] getUrlPattern() {
+    return new Object[][]{
+        {"/index.html", "/index\\.html.*"},
+        {"/index.html?doGet", "/index\\.html\\?doGet.*"},
+        {"*somepage.aspx", ".*somepage\\.aspx.*"},
+        {"*/index.html", ".*/index\\.html.*"}
+    };
+  }
+
+  @Test(dataProvider = "urlPattern")
+  public void testUrlRegex(String urlPattern, String compiledPattern) {
+    assertEquals(
+        RobotsTxt.newBuilder().buildPathRegex(urlPattern),
+        compiledPattern);
   }
 }

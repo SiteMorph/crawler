@@ -53,6 +53,10 @@ public class RobotsTxt {
     }
   }
 
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
   /**
    * Stateful builder that understands new agent directives and path rule
    * order addition. Assumes rules are added as specified.
@@ -109,8 +113,8 @@ public class RobotsTxt {
         return "";
       }
       // replace any . match all with escaped version
-      path = path.replaceAll("\\.", "\\.");
-      path = path.replaceAll("\\?", "\\?");
+      path = path.replaceAll("\\.", "\\\\.");
+      path = path.replaceAll("\\?", "\\\\?");
       // replace wildcard star with regex match any
       path = path.replaceAll("\\*", ".*");
       return path + ".*";
