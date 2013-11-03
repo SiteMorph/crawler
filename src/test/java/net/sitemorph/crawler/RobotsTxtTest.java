@@ -160,7 +160,8 @@ public class RobotsTxtTest {
         {"*somepage.aspx", ".*somepage\\.aspx.*"},
         {"*/index.html", ".*/index\\.html.*"},
         {"", ""},
-        {"*", ".*.*"}
+        {"*", ".*.*"},
+        {"/some+path/", "/some\\+path/.*"},
     };
   }
 

@@ -4,11 +4,15 @@
 
 package net.sitemorph.crawler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Robots directive parser and logic.
@@ -19,6 +23,7 @@ public class RobotsTxt {
       MATCH_ANY_PATH = ".*",
       EMPTY = "",
       END_OF_LINE_COMMENT = "\\#.*$";
+  private static final Logger log = LoggerFactory.getLogger(RobotsTxt.class);
 
   private Map<String, List<Rule>> agents = new HashMap<String, List<Rule>>();
 
@@ -37,7 +42,12 @@ public class RobotsTxt {
     }
 
     boolean matches(String path) {
-      return null != path && path.matches(regex);
+      try {
+        return null != path && path.matches(regex);
+      } catch (PatternSyntaxException e) {
+        log.error("BUG in robots pattern matching", e);
+        return false;
+      }
     }
 
     boolean fetchPermissible() {
@@ -115,6 +125,7 @@ public class RobotsTxt {
       // replace any . match all with escaped version
       path = path.replaceAll("\\.", "\\\\.");
       path = path.replaceAll("\\?", "\\\\?");
+      path = path.replaceAll("\\+", "\\\\+");
       // replace wildcard star with regex match any
       path = path.replaceAll("\\*", ".*");
       return path + ".*";
