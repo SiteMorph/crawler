@@ -158,7 +158,9 @@ public class RobotsTxtTest {
         {"/index.html", "/index\\.html.*"},
         {"/index.html?doGet", "/index\\.html\\?doGet.*"},
         {"*somepage.aspx", ".*somepage\\.aspx.*"},
-        {"*/index.html", ".*/index\\.html.*"}
+        {"*/index.html", ".*/index\\.html.*"},
+        {"", ""},
+        {"*", ".*.*"}
     };
   }
 
