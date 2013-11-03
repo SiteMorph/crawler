@@ -103,11 +103,16 @@ public class RobotsTxt {
       return this;
     }
 
-    private String buildPathRegex(String path) {
+    String buildPathRegex(String path) {
       if (EMPTY.equals(path.trim())) {
         // no path implies match nothing
         return "";
       }
+      // replace any . match all with escaped version
+      path = path.replaceAll("\\.", "\\.");
+      path = path.replaceAll("\\?", "\\?");
+      // replace wildcard star with regex match any
+      path = path.replaceAll("\\*", ".*");
       return path + ".*";
     }
 

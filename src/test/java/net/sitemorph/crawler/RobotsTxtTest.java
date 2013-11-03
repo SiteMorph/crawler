@@ -4,16 +4,17 @@
 
 package net.sitemorph.crawler;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import net.sitemorph.crawler.Response.Builder;
+
+import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import net.sitemorph.crawler.Response.Builder;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test robots implementation.
@@ -21,6 +22,22 @@ import org.testng.annotations.Test;
  * @author dak
  */
 public class RobotsTxtTest {
+
+  @Test
+  public void testWildcardPrefix() throws MalformedURLException {
+    String data = "# Tell search engines not to index these folders\n" +
+        "User-agent: *\n" +
+        "Disallow: /_admin\n" +
+        "Disallow: *SaveSearch.aspx\n" +
+        "Sitemap: /sitemap.xml\n" +
+        "User-agent: Baiduspider\n" +
+        "Disallow: /\n" +
+        "User-agent: Baiduspider-video\n" +
+        "Disallow: /";
+    RobotsTxt robots = RobotsTxt.fromResponse(buildOkResponseWithBody(data));
+    assertFalse(robots.pathIsAllowed("SiteMorph",
+        "/somewhere/SaveSearch.aspx"), "Save search should not be allowed");
+  }
 
   @Test
   public void testWildcardDisallowAllowed() throws MalformedURLException {
