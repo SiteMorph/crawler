@@ -4,16 +4,19 @@
 
 package net.sitemorph.crawler;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import net.sitemorph.crawler.Response.Builder;
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import net.sitemorph.crawler.Response.Builder;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test robots implementation.
@@ -21,6 +24,22 @@ import org.testng.annotations.Test;
  * @author dak
  */
 public class RobotsTxtTest {
+
+  @Test
+  public void testWildcardPrefix() throws MalformedURLException {
+    String data = "# Tell search engines not to index these folders\n" +
+        "User-agent: *\n" +
+        "Disallow: /_admin\n" +
+        "Disallow: *SaveSearch.aspx\n" +
+        "Sitemap: /sitemap.xml\n" +
+        "User-agent: Baiduspider\n" +
+        "Disallow: /\n" +
+        "User-agent: Baiduspider-video\n" +
+        "Disallow: /";
+    RobotsTxt robots = RobotsTxt.fromResponse(buildOkResponseWithBody(data));
+    assertFalse(robots.pathIsAllowed("SiteMorph",
+        "/somewhere/SaveSearch.aspx"), "Save search should not be allowed");
+  }
 
   @Test
   public void testWildcardDisallowAllowed() throws MalformedURLException {
@@ -131,5 +150,25 @@ public class RobotsTxtTest {
         .setStatusCode(StatusCode.OK)
         .setBody(body)
         .build();
+  }
+
+  @DataProvider(name = "urlPattern")
+  public Object[][] getUrlPattern() {
+    return new Object[][]{
+        {"/index.html", "/index\\.html.*"},
+        {"/index.html?doGet", "/index\\.html\\?doGet.*"},
+        {"*somepage.aspx", ".*somepage\\.aspx.*"},
+        {"*/index.html", ".*/index\\.html.*"},
+        {"", ""},
+        {"*", ".*.*"},
+        {"/some+path/", "/some\\+path/.*"},
+    };
+  }
+
+  @Test(dataProvider = "urlPattern")
+  public void testUrlRegex(String urlPattern, String compiledPattern) {
+    assertEquals(
+        RobotsTxt.newBuilder().buildPathRegex(urlPattern),
+        compiledPattern);
   }
 }
